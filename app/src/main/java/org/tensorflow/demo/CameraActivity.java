@@ -84,9 +84,16 @@ public class CameraActivity extends Activity {
   }
 
   private void setFragment() {
-    getFragmentManager()
+    if (Build.VERSION.SDK_INT >= 21) {  /* API21 ? */
+      getFragmentManager()
             .beginTransaction()
-            .replace(R.id.container, CameraConnectionFragment.newInstance())
+            .replace(R.id.container, Camera2ConnectionFragment.newInstance())
             .commit();
+    } else {
+      getFragmentManager()
+              .beginTransaction()
+              .replace(R.id.container, Camera1ConnectionFragment.newInstance())
+              .commit();
+    }
   }
 }

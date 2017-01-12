@@ -65,7 +65,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-public class CameraConnectionFragment extends Fragment {
+public class Camera1ConnectionFragment extends Fragment {
   private static final Logger LOGGER = new Logger();
 
   /**
@@ -99,6 +99,7 @@ public class CameraConnectionFragment extends Fragment {
    * {@link android.view.TextureView.SurfaceTextureListener} handles several lifecycle events on a
    * {@link TextureView}.
    */
+  /* ToDO: API19
   private final TextureView.SurfaceTextureListener surfaceTextureListener =
       new TextureView.SurfaceTextureListener() {
         @Override
@@ -121,6 +122,7 @@ public class CameraConnectionFragment extends Fragment {
         @Override
         public void onSurfaceTextureUpdated(final SurfaceTexture texture) {}
       };
+  */
 
   /**
    * ID of the current {@link CameraDevice}.
@@ -156,6 +158,7 @@ public class CameraConnectionFragment extends Fragment {
    * {@link android.hardware.camera2.CameraDevice.StateCallback}
    * is called when {@link CameraDevice} changes its state.
    */
+  /* ToDO: API19
   private final CameraDevice.StateCallback stateCallback =
       new CameraDevice.StateCallback() {
         @Override
@@ -184,7 +187,7 @@ public class CameraConnectionFragment extends Fragment {
           }
         }
       };
-
+  */
   /**
    * An additional thread for running tasks that shouldn't block the UI.
    */
@@ -254,6 +257,7 @@ public class CameraConnectionFragment extends Fragment {
    * @param aspectRatio The aspect ratio
    * @return The optimal {@code Size}, or an arbitrary one if none were big enough
    */
+  /* ToDO: API19
   private static Size chooseOptimalSize(
       final Size[] choices, final int width, final int height, final Size aspectRatio) {
     // Collect the supported resolutions that are at least as big as the preview Surface
@@ -286,9 +290,10 @@ public class CameraConnectionFragment extends Fragment {
       return choices[0];
     }
   }
+  */
 
-  public static CameraConnectionFragment newInstance() {
-    return new CameraConnectionFragment();
+  public static Camera1ConnectionFragment newInstance() {
+    return new Camera1ConnectionFragment();
   }
 
   @Override
@@ -328,11 +333,13 @@ public class CameraConnectionFragment extends Fragment {
     // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
     // a camera and start preview from here (otherwise, we wait until the surface is ready in
     // the SurfaceTextureListener).
+    /* ToDO: API19
     if (textureView.isAvailable()) {
       openCamera(textureView.getWidth(), textureView.getHeight());
     } else {
       textureView.setSurfaceTextureListener(surfaceTextureListener);
     }
+    */
   }
 
   @Override
@@ -352,6 +359,7 @@ public class CameraConnectionFragment extends Fragment {
     final Activity activity = getActivity();
     final CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
     try {
+      /* ToDO: API19
       for (final String cameraId : manager.getCameraIdList()) {
         final CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
 
@@ -396,11 +404,12 @@ public class CameraConnectionFragment extends Fragment {
 //        }
         textureView.setAspectRatio(previewSize.getWidth(), previewSize.getHeight());
 
-        CameraConnectionFragment.this.cameraId = cameraId;
+        Camera1ConnectionFragment.this.cameraId = cameraId;
         return;
       }
     } catch (final CameraAccessException e) {
       LOGGER.e(e, "Exception!");
+      */
     } catch (final NullPointerException e) {
       // Currently an NPE is thrown when the Camera2API is used but not supported on the
       // device this code runs.
@@ -410,13 +419,16 @@ public class CameraConnectionFragment extends Fragment {
   }
 
   /**
-   * Opens the camera specified by {@link CameraConnectionFragment#cameraId}.
+   * Opens the camera specified by {@link Camera1ConnectionFragment#cameraId}.
    */
   private void openCamera(final int width, final int height) {
     setUpCameraOutputs(width, height);
+    /* ToDO: API19
     configureTransform(width, height);
+    */
     final Activity activity = getActivity();
     final CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+    /* ToDO: API19
     try {
       if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
         throw new RuntimeException("Time out waiting to lock camera opening.");
@@ -427,12 +439,14 @@ public class CameraConnectionFragment extends Fragment {
     } catch (final InterruptedException e) {
       throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
     }
+　　*/
   }
 
   /**
    * Closes the current {@link CameraDevice}.
    */
   private void closeCamera() {
+    /* ToDO: API19
     try {
       cameraOpenCloseLock.acquire();
       if (null != captureSession) {
@@ -452,6 +466,7 @@ public class CameraConnectionFragment extends Fragment {
     } finally {
       cameraOpenCloseLock.release();
     }
+   */
   }
 
   /**
@@ -488,25 +503,27 @@ public class CameraConnectionFragment extends Fragment {
 
   private final TensorFlowImageListener tfPreviewListener = new TensorFlowImageListener();
 
+  /* ToDO: API19
   private final CameraCaptureSession.CaptureCallback captureCallback =
-      new CameraCaptureSession.CaptureCallback() {
-        @Override
-        public void onCaptureProgressed(
-            final CameraCaptureSession session,
-            final CaptureRequest request,
-            final CaptureResult partialResult) {}
+    new CameraCaptureSession.CaptureCallback() {
+      @Override
+      public void onCaptureProgressed(
+          final CameraCaptureSession session,
+          final CaptureRequest request,
+          final CaptureResult partialResult) {}
 
-        @Override
-        public void onCaptureCompleted(
-            final CameraCaptureSession session,
-            final CaptureRequest request,
-            final TotalCaptureResult result) {}
-      };
-
-  /**
-   * Creates a new {@link CameraCaptureSession} for camera preview.
+      @Override
+      public void onCaptureCompleted(
+          final CameraCaptureSession session,
+          final CaptureRequest request,
+          final TotalCaptureResult result) {}
+    };
    */
-  private void createCameraPreviewSession() {
+/**
+ * Creates a new {@link CameraCaptureSession} for camera preview.
+ */
+ /* ToDO: API19
+   private void createCameraPreviewSession() {
     try {
       final SurfaceTexture texture = textureView.getSurfaceTexture();
       assert texture != null;
@@ -578,7 +595,7 @@ public class CameraConnectionFragment extends Fragment {
         getActivity().getAssets(), scoreView, boundingBoxView, inferenceHandler, sensorOrientation);
     LOGGER.i("TensorFlow initialized.");
   }
-
+*/
   /**
    * Configures the necessary {@link android.graphics.Matrix} transformation to `mTextureView`.
    * This method should be called after the camera preview size is determined in
@@ -587,6 +604,7 @@ public class CameraConnectionFragment extends Fragment {
    * @param viewWidth  The width of `mTextureView`
    * @param viewHeight The height of `mTextureView`
    */
+  /* ToDO: API19
   private void configureTransform(final int viewWidth, final int viewHeight) {
     final Activity activity = getActivity();
     if (null == textureView || null == previewSize || null == activity) {
@@ -612,10 +630,12 @@ public class CameraConnectionFragment extends Fragment {
     }
     textureView.setTransform(matrix);
   }
+  */
 
   /**
    * Compares two {@code Size}s based on their areas.
    */
+  /* ToDO: API19
   static class CompareSizesByArea implements Comparator<Size> {
     @Override
     public int compare(final Size lhs, final Size rhs) {
@@ -624,6 +644,7 @@ public class CameraConnectionFragment extends Fragment {
           (long) lhs.getWidth() * lhs.getHeight() - (long) rhs.getWidth() * rhs.getHeight());
     }
   }
+  */
 
   /**
    * Shows an error message dialog.

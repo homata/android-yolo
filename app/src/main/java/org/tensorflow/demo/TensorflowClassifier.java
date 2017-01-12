@@ -60,9 +60,12 @@ class TensorFlowClassifier implements Classifier {
 
   private native String classifyImageRgb(int[] output, int width, int height);
 
+   /* ToDO: API19
+  java.lang.UnsatisfiedLinkError: dlopen failed: cannot locate symbol "rand" referenced by "libtensorflow_demo.so"...
   static {
     System.loadLibrary("tensorflow_demo");
   }
+  */
 
   @Override
   public List<Recognition> recognizeImage(final Bitmap bitmap) {
